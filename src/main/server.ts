@@ -35,27 +35,13 @@ UserMemoryRepository.persistenceEvents.addListener(
 // Register all domain events
 console.log(`Class Event Name: ${UserCreatedEvent.name}`);
 CoreDomainEvents.register(UserCreatedEvent.name, (userEvent: unknown) => {
-  // welcome email sender facotry
-  const emailTransporter = new MemoryEmailTransport();
-  const welcomeEmailSender = new WelcomeEmailSender(emailTransporter);
-  const userMemoryRepository = new UserMemoryRepository();
+  // abstract for less coupling
+  //
+  // 1 - welcome email sender factory
 
-  // usercreatedeventhandler interface
-  // AfterUserCreatedEventHandler
-  // UserCreatedEventHandler
+  // 2 - UserCreatedEventHandler
+  // 3 - Custom Errors
 
   // Wait 10 seconds to query user and send meail
   console.log("Received event but waiting a bit to send email", userEvent);
-  if (!(userEvent instanceof UserCreatedEvent)) {
-    console.log("received event is not a user event", userEvent);
-    return;
-  }
-  setTimeout(async () => {
-    const user = await userMemoryRepository.getById(userEvent.userId);
-    if (user) {
-      welcomeEmailSender.sendWelcomeEmail(UserMapper.toDomain(user));
-      return;
-    }
-    console.log("User not found, something terrible happened");
-  }, 10_000);
 });

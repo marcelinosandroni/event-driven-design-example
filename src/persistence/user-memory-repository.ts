@@ -27,4 +27,8 @@ export class UserMemoryRepository implements UserRepository {
   async getById(id: string): Promise<UserDto | void> {
     return this.users.find((user) => user.id === id);
   }
+
+  async getByEmail(email: string): Promise<UserDto | void> {
+    return this.users.find((user) => user.email === email);
+  }
 }

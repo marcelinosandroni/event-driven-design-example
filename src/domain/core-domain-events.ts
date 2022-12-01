@@ -3,7 +3,6 @@ import { AggregateRoot } from "./aggregate-root";
 
 export class CoreDomainEvents {
   private static events = new EventEmitter();
-  private static handlers: Map<string, Function[]> = new Map();
   private static aggregates: AggregateRoot[] = [];
 
   public static addAggregate(aggregate: AggregateRoot): void {
@@ -21,17 +20,13 @@ export class CoreDomainEvents {
   }
 
   public static dispatchAggregate(aggregateId: string): void {
-    console.log(`received aggregate id: ${aggregateId}`);
-    // only if is aggregate id
     const aggregate = this.aggregates.find(
       (aggregate) => aggregate.id === aggregateId
     );
 
-    console.log({ aggregate });
-
     if (aggregate) {
       aggregate.getEvents().forEach((event) => {
-        CoreDomainEvents.events.emit(event.name, event);
+        CoreDomainEvents.events.emit(event.eventType, event);
       });
       console.log("dispatchAggregate", aggregateId);
     }
